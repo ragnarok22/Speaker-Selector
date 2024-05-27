@@ -8,13 +8,13 @@ const manifiest = {
   description: "Check how spoke in the scrum meeting",
   action: {
     default_icon: "icon.png",
-    default_popup: "popup.html"
+    default_popup: "popup.html",
   },
   icons: {
     "16": "icon.png",
     "32": "icon.png",
     "48": "icon.png",
-    "128": "icon.png"
+    "128": "icon.png",
   },
   content_scripts: [
     {
@@ -22,7 +22,7 @@ const manifiest = {
         "https://meet.google.com/*",
       ],
       js: [
-        "scripts/meet-content.ts"
+        "scripts/meet-content.ts",
       ]
     }
   ],
@@ -30,11 +30,12 @@ const manifiest = {
     "https://meet.google.com/*",
   ],
   background: {
-    "service_worker": "src/background.ts"
+    "service_worker": "src/background.ts",
   },
   permissions: [
-    "scripting"
-  ]
+    "storage",
+    "scripting",
+  ],
 }
 
 export default manifiest

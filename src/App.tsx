@@ -1,17 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Logo from './assets/icon.png'
 import './App.css'
 import PersonItem from './PersonItem'
 import { Person } from './definitions'
 
 function App() {
-  const defaultList: Person[] = [
-    { id: 1, name: 'Alice', spoke: false },
-    { id: 2, name: 'Bob', spoke: false },
-    { id: 3, name: 'Charlie', spoke: false },
-  ]
-  const [persons, setPersons] = useState<Person[]>(defaultList)
+  const [persons, setPersons] = useState<Person[]>([])
   const [randomPerson, setRandomPerson] = useState<Person | null>(null)
+
+  chrome.runtime.onMessage.addListener((request) => {
+    console.log('received', request)
+    if (request.persons) {
+      setPersons(request.persons);
+    }
+    return true;
+  });
 
   const handleToggle = (checked: boolean, person: Person) => {
     setPersons((persons) =>
@@ -21,13 +24,15 @@ function App() {
     )
   }
 
-  chrome.runtime.onMessage.addListener((request) => {
-    console.log('received', request)
-    if (request.persons) {
-      setPersons(request.persons);
-    }
-    return true;
-  });
+  useEffect(() => {
+    chrome.storage.local.get('persons', (data) => {
+      console.log('data', data)
+      if (data.persons) {
+        setPersons(data.persons)
+      }
+    })
+  }, [])
+
 
   return (
     <>
