@@ -1,7 +1,5 @@
 import { Person } from '../src/definitions'
 
-const global_people: Person[] = []
-
 const parsePerson = (id: number, name) => {
   let parsedName = name
   if (name && name.includes('\n')) {
@@ -25,12 +23,15 @@ const getMeetPersons = () => {
 setInterval(() => {
   const persons = getMeetPersons()
   if (persons.length) {
-    if (global_people.length !== persons.length) {
-      global_people.push(...persons)
-      // set to local storage
-      chrome.storage.local.set({ persons })
-      // set to background
-      chrome.runtime.sendMessage({ persons })
-    }
+    chrome.storage.local.get('persons')
+      .then(({ persons: global_people }) => {
+        if (global_people.length !== persons.length) {
+          global_people.push(...persons)
+          // set to local storage
+          chrome.storage.local.set({ persons })
+          // set to background
+          chrome.runtime.sendMessage({ persons })
+        }
+      })
   }
 }, 1000)

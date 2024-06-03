@@ -11,7 +11,16 @@ function App() {
   chrome.runtime.onMessage.addListener((request) => {
     console.log('received', request)
     if (request.persons) {
-      setPersons(request.persons);
+      // keep the state in sync with the storage
+      const persons = request.persons.map((person: Person) => {
+        const existingPerson = persons.find((p) => p.id === person.id)
+        if (existingPerson) {
+          return existingPerson
+        }
+        return person
+      })
+
+      setPersons(persons);
     }
     return true;
   });
