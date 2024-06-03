@@ -13,7 +13,7 @@ function App() {
     if (request.persons) {
       // keep the state in sync with the storage
       const persons = request.persons.map((person: Person) => {
-        const existingPerson = persons.find((p) => p.id === person.id)
+        const existingPerson = persons.find((p: Person) => p.id === person.id)
         if (existingPerson) {
           return existingPerson
         }
